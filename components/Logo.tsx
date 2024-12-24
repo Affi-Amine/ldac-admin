@@ -10,6 +10,7 @@ export function Logo() {
         height={80}
         priority
       />
+      <h1 className="text-center text-xl mt-2 tracking-widest">La Dame au Chignon</h1>
     </div>
   )
 }

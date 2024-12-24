@@ -78,10 +78,7 @@ export function LoginForm() {
             </div>
           </div>
 
-          <Button
-            type="submit"
-            className="w-full bg-black text-white hover:bg-white hover:text-black border border-black"
-          >
+          <Button type="submit" className="w-full">
             Se connecter
           </Button>
         </form>

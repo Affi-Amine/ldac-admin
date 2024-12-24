@@ -1,16 +1,21 @@
 import { Building2 } from 'lucide-react'
+import { getPartners } from '@/app/actions/partners'
+import { PartnersTable } from '@/components/partners/partners-table'
+import { PartnerActions } from '@/components/partners/partner-actions'
 
-export default function PartnersPage() {
+export default async function PartnersPage() {
+  const partners = await getPartners()
+
   return (
-    <div>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Partenaires</h1>
-        <Building2 className="h-6 w-6" />
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-semibold">Partenaires</h1>
+          <Building2 className="h-6 w-6" />
+        </div>
+        <PartnerActions partners={partners} />
       </div>
-      <p className="text-lg">
-        Bienvenue sur la page de gestion des partenaires. Ici, vous pouvez voir et gérer tous les partenaires de La Dame au Chignon.
-      </p>
-      {/* Add more partner management content here */}
+      <PartnersTable partners={partners} />
     </div>
   )
 }
