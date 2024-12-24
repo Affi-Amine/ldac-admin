@@ -33,6 +33,11 @@ export async function deletePartner(firebase_uid: string): Promise<{ success: bo
     })
 
     const data = await response.json()
+
+    if (!response.ok) {
+      throw new Error(data.message || `HTTP error! status: ${response.status}`)
+    }
+
     return {
       success: data.success,
       message: data.message,

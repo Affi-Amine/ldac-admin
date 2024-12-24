@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   Dialog,
@@ -12,33 +12,25 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { addPartner } from '@/app/actions/partners'
+import { Partner } from '@/types/partner'
+import { modifyPartner } from '@/app/actions/partners'
 
-interface AddPartnerDialogProps {
+interface EditPartnerDialogProps {
+  partner: Partner
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-const initialFormData = {
-  name: '',
-  contact_email: '',
-  phone_number: '',
-  password: '',
-  description: '',
-}
-
-export function AddPartnerDialog({ open, onOpenChange }: AddPartnerDialogProps) {
+export function EditPartnerDialog({ partner, open, onOpenChange }: EditPartnerDialogProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
-  const [formData, setFormData] = useState(initialFormData)
-
-  useEffect(() => {
-    if (!open) {
-      setFormData(initialFormData)
-      setMessage('')
-    }
-  }, [open])
+  const [formData, setFormData] = useState({
+    name: partner.name,
+    contact_email: partner.contact_email,
+    phone_number: partner.phone_number,
+    description: '',
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -46,26 +38,24 @@ export function AddPartnerDialog({ open, onOpenChange }: AddPartnerDialogProps) 
     setMessage('')
 
     try {
-      const result = await addPartner({
+      const result = await modifyPartner({
+        firebase_uid: partner.firebase_uid,
         name: formData.name,
         contact_email: formData.contact_email,
         phone_number: formData.phone_number,
-        password: formData.password,
       })
 
       if (result.success) {
-        setMessage('Partner added successfully')
-        console.log('Partner added:', result.partner)
+        setMessage('Partner updated successfully')
+        console.log('Partner updated:', result.partner)
+        onOpenChange(false)
         router.refresh()
-        setTimeout(() => {
-          onOpenChange(false)
-        }, 1500) // Close dialog after 1.5 seconds
       } else {
         throw new Error(result.message)
       }
     } catch (error) {
-      console.error('Error adding partner:', error)
-      setMessage(error instanceof Error ? error.message : 'Failed to add partner')
+      console.error('Error updating partner:', error)
+      setMessage(error instanceof Error ? error.message : 'Failed to update partner')
     } finally {
       setLoading(false)
     }
@@ -73,9 +63,9 @@ export function AddPartnerDialog({ open, onOpenChange }: AddPartnerDialogProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] bg-white text-black">
+      <DialogContent className="sm:max-w-[600px text-black bg-white">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Ajouter Partenaire</DialogTitle>
+          <DialogTitle className="text-2xl">Modifier Partenaire</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
@@ -113,18 +103,6 @@ export function AddPartnerDialog({ open, onOpenChange }: AddPartnerDialogProps) 
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              value={formData.password}
-              onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-              className="h-12"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
@@ -146,7 +124,7 @@ export function AddPartnerDialog({ open, onOpenChange }: AddPartnerDialogProps) 
               disabled={loading}
               className="bg-black hover:bg-black/90 text-white px-12 py-6 text-lg h-auto"
             >
-              {loading ? 'Ajout...' : 'Ajouter'}
+              {loading ? 'Modification...' : 'Modifier'}
             </Button>
           </div>
         </form>
