@@ -1,16 +1,21 @@
 import { Users } from 'lucide-react'
+import { getUsers } from '@/app/actions/users'
+import { UsersTable } from '@/components/users/users-table'
+import { ExportUsers } from '@/components/users/export-users'
 
-export default function UsersPage() {
+export default async function UsersPage() {
+  const users = await getUsers()
+
   return (
-    <div>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Utilisateurs</h1>
-        <Users className="h-6 w-6" />
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-semibold">Utilisateurs</h1>
+          <Users className="h-6 w-6" />
+        </div>
+        <ExportUsers users={users} />
       </div>
-      <p className="text-lg">
-        Bienvenue sur la page de gestion des utilisateurs. Ici, vous pouvez voir et gérer tous les utilisateurs de La Dame au Chignon.
-      </p>
-      {/* Add more user management content here */}
+      <UsersTable users={users} />
     </div>
   )
 }
