@@ -15,6 +15,14 @@ import { Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { EditPartnerDialog } from './edit-partner-dialog'
 import { deletePartner } from '@/app/actions/partners'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 interface PartnersTableProps {
   partners: Partner[]
@@ -23,22 +31,21 @@ interface PartnersTableProps {
 export function PartnersTable({ partners }: PartnersTableProps) {
   const router = useRouter()
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null)
+  const [deletingPartner, setDeletingPartner] = useState<Partner | null>(null)
   const [loading, setLoading] = useState<string | null>(null)
   const [message, setMessage] = useState('')
 
-  const handleDelete = async (partner: Partner) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce partenaire ?')) {
-      return
-    }
+  const handleDelete = async () => {
+    if (!deletingPartner) return
 
-    setLoading(partner.firebase_uid)
+    setLoading(deletingPartner.firebase_uid)
     setMessage('')
     try {
-      const result = await deletePartner(partner.firebase_uid)
+      const result = await deletePartner(deletingPartner.firebase_uid)
       
       if (result.success) {
         setMessage('Partner deleted successfully')
-        console.log('Partner deleted:', partner)
+        console.log('Partner deleted:', deletingPartner)
         router.refresh()
       } else {
         throw new Error(result.message)
@@ -48,6 +55,7 @@ export function PartnersTable({ partners }: PartnersTableProps) {
       setMessage(error instanceof Error ? error.message : 'Failed to delete partner')
     } finally {
       setLoading(null)
+      setDeletingPartner(null)
     }
   }
 
@@ -88,7 +96,7 @@ export function PartnersTable({ partners }: PartnersTableProps) {
                       variant="ghost"
                       size="icon"
                       disabled={loading === partner.firebase_uid}
-                      onClick={() => handleDelete(partner)}
+                      onClick={() => setDeletingPartner(partner)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -113,6 +121,24 @@ export function PartnersTable({ partners }: PartnersTableProps) {
           }}
         />
       )}
+      <Dialog open={!!deletingPartner} onOpenChange={(open) => !open && setDeletingPartner(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmer la suppression</DialogTitle>
+            <DialogDescription>
+              Êtes-vous sûr de vouloir supprimer le partenaire {deletingPartner?.name} ? Cette action est irréversible.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeletingPartner(null)}>
+              Annuler
+            </Button>
+            <Button variant="destructive" onClick={handleDelete} disabled={loading === deletingPartner?.firebase_uid}>
+              {loading === deletingPartner?.firebase_uid ? 'Suppression...' : 'Supprimer'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

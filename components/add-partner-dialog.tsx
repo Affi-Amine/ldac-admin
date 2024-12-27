@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   Dialog,
@@ -19,17 +19,26 @@ interface AddPartnerDialogProps {
   onOpenChange: (open: boolean) => void
 }
 
+const initialFormData = {
+  name: '',
+  contact_email: '',
+  phone_number: '',
+  password: '',
+  description: '',
+}
+
 export function AddPartnerDialog({ open, onOpenChange }: AddPartnerDialogProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
-  const [formData, setFormData] = useState({
-    name: '',
-    contact_email: '',
-    phone_number: '',
-    password: '',
-    description: '',
-  })
+  const [formData, setFormData] = useState(initialFormData)
+
+  useEffect(() => {
+    if (!open) {
+      setFormData(initialFormData)
+      setMessage('')
+    }
+  }, [open])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -47,8 +56,10 @@ export function AddPartnerDialog({ open, onOpenChange }: AddPartnerDialogProps) 
       if (result.success) {
         setMessage('Partner added successfully')
         console.log('Partner added:', result.partner)
-        onOpenChange(false)
         router.refresh()
+        setTimeout(() => {
+          onOpenChange(false)
+        }, 1500) // Close dialog after 1.5 seconds
       } else {
         throw new Error(result.message)
       }
@@ -102,16 +113,6 @@ export function AddPartnerDialog({ open, onOpenChange }: AddPartnerDialogProps) 
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              className="min-h-[100px] resize-none"
-            />
-          </div>
-
-          <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
@@ -120,6 +121,16 @@ export function AddPartnerDialog({ open, onOpenChange }: AddPartnerDialogProps) 
               onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
               className="h-12"
               required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              value={formData.description}
+              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              className="min-h-[100px] resize-none"
             />
           </div>
 

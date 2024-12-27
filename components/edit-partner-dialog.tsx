@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { Partner } from '@/types/partner'
 import { modifyPartner } from '@/app/actions/partners'
 
@@ -28,6 +29,7 @@ export function EditPartnerDialog({ partner, open, onOpenChange }: EditPartnerDi
     name: partner.name,
     contact_email: partner.contact_email,
     phone_number: partner.phone_number,
+    description: '',
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,7 +40,9 @@ export function EditPartnerDialog({ partner, open, onOpenChange }: EditPartnerDi
     try {
       const result = await modifyPartner({
         firebase_uid: partner.firebase_uid,
-        ...formData,
+        name: formData.name,
+        contact_email: formData.contact_email,
+        phone_number: formData.phone_number,
       })
 
       if (result.success) {
@@ -59,20 +63,22 @@ export function EditPartnerDialog({ partner, open, onOpenChange }: EditPartnerDi
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Modifier le partenaire</DialogTitle>
+          <DialogTitle className="text-2xl">Modifier Partenaire</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="name">Nom</Label>
+            <Label htmlFor="name">Nom du partenaire</Label>
             <Input
               id="name"
               value={formData.name}
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              className="h-12"
               required
             />
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -80,33 +86,44 @@ export function EditPartnerDialog({ partner, open, onOpenChange }: EditPartnerDi
               type="email"
               value={formData.contact_email}
               onChange={(e) => setFormData(prev => ({ ...prev, contact_email: e.target.value }))}
+              className="h-12"
               required
             />
           </div>
+
           <div className="space-y-2">
-            <Label htmlFor="phone">Téléphone</Label>
+            <Label htmlFor="phone">Telephone</Label>
             <Input
               id="phone"
               value={formData.phone_number}
               onChange={(e) => setFormData(prev => ({ ...prev, phone_number: e.target.value }))}
+              className="h-12"
               required
             />
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              value={formData.description}
+              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              className="min-h-[100px] resize-none"
+            />
+          </div>
+
           {message && (
             <div className={`text-sm ${message.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>
               {message}
             </div>
           )}
-          <div className="flex justify-end space-x-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
+
+          <div className="flex justify-center pt-4">
+            <Button 
+              type="submit" 
               disabled={loading}
+              className="bg-black hover:bg-black/90 text-white px-12 py-6 text-lg h-auto"
             >
-              Annuler
-            </Button>
-            <Button type="submit" disabled={loading}>
               {loading ? 'Modification...' : 'Modifier'}
             </Button>
           </div>
