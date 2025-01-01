@@ -11,7 +11,7 @@ export async function getPartners(): Promise<Partner[]> {
     })
     
     if (!response.ok) {
-      throw new Error('Failed to fetch partners')
+      throw new Error(`HTTP error! status: ${response.status}`)
     }
 
     const data: PartnersResponse = await response.json()

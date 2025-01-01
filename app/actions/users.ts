@@ -11,7 +11,7 @@ export async function getUsers(): Promise<User[]> {
     })
     
     if (!response.ok) {
-      throw new Error('Failed to fetch users')
+      throw new Error(`HTTP error! status: ${response.status}`)
     }
 
     const data: UsersResponse = await response.json()

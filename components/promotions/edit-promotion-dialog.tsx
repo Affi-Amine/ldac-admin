@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import {
   Dialog,
   DialogContent,
@@ -19,34 +20,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { addPromotion, getPartners, Partner } from '@/app/actions/promotions'
+import { modifyPromotion, getPartners, Partner } from '@/app/actions/promotions'
+import { Promotion } from '@/types/promotion'
 
-interface AddPromotionDialogProps {
+interface EditPromotionDialogProps {
+  promotion: Promotion
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
 const PACK_TYPES = [
-  "Absolute",
-  "Evolution",
-  "Origin"
-]
+    "Absolute",
+    "Evolution",
+    "Origin"
+  ]
+  
 
-export function AddPromotionDialog({ open, onOpenChange }: AddPromotionDialogProps) {
+export function EditPromotionDialog({ promotion, open, onOpenChange }: EditPromotionDialogProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [partners, setPartners] = useState<Partner[]>([])
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    pack_type: '',
-    valid_from: '',
-    valid_until: '',
-    usage_limit: '',
-    partner_name: '',
+    promotion_id: promotion.promotion_id,
+    name: promotion.name,
+    description: promotion.description,
+    pack_type: promotion.pack_type,
+    valid_from: promotion.valid_from.split('T')[0],
+    valid_until: promotion.valid_until.split('T')[0],
+    usage_limit: promotion.usage_limit.toString(),
+    partner_name: promotion.partner_name || '',
     image: null as File | null,
   })
+  const [imagePreview, setImagePreview] = useState<string | null>(promotion.image || null)
 
   useEffect(() => {
     async function fetchPartners() {
@@ -74,10 +80,10 @@ export function AddPromotionDialog({ open, onOpenChange }: AddPromotionDialogPro
         }
       })
 
-      const result = await addPromotion(formDataToSend)
+      const result = await modifyPromotion(formDataToSend)
 
       if (result.success) {
-        setMessage('Promotion added successfully')
+        setMessage('Promotion modified successfully')
         router.refresh()
         setTimeout(() => {
           onOpenChange(false)
@@ -86,8 +92,8 @@ export function AddPromotionDialog({ open, onOpenChange }: AddPromotionDialogPro
         throw new Error(result.message)
       }
     } catch (error) {
-      console.error('Error adding promotion:', error)
-      setMessage(error instanceof Error ? error.message : 'Failed to add promotion')
+      console.error('Error modifying promotion:', error)
+      setMessage(error instanceof Error ? error.message : 'Failed to modify promotion')
     } finally {
       setLoading(false)
     }
@@ -95,7 +101,14 @@ export function AddPromotionDialog({ open, onOpenChange }: AddPromotionDialogPro
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFormData(prev => ({ ...prev, image: e.target.files![0] }))
+      const file = e.target.files[0]
+      setFormData(prev => ({ ...prev, image: file }))
+
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        setImagePreview(event.target?.result as string)
+      }
+      reader.readAsDataURL(file)
     }
   }
 
@@ -103,7 +116,7 @@ export function AddPromotionDialog({ open, onOpenChange }: AddPromotionDialogPro
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] w-[600px] h-[800px] bg-white text-black overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Ajouter Promotion</DialogTitle>
+          <DialogTitle className="text-2xl">Modifier Promotion</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
@@ -141,7 +154,7 @@ export function AddPromotionDialog({ open, onOpenChange }: AddPromotionDialogPro
               <SelectTrigger className="h-12">
                 <SelectValue placeholder="Sélectionner un type de pack" />
               </SelectTrigger>
-              <SelectContent className='bg-white'>
+              <SelectContent>
                 {PACK_TYPES.map((type) => (
                   <SelectItem key={type} value={type}>
                     {type}
@@ -200,7 +213,7 @@ export function AddPromotionDialog({ open, onOpenChange }: AddPromotionDialogPro
               <SelectTrigger className="h-12">
                 <SelectValue placeholder="Sélectionner un partenaire" />
               </SelectTrigger>
-              <SelectContent className='bg-white'>
+              <SelectContent>
                 {partners.map((partner) => (
                   <SelectItem key={partner.id} value={partner.name}>
                     {partner.name}
@@ -219,6 +232,11 @@ export function AddPromotionDialog({ open, onOpenChange }: AddPromotionDialogPro
               onChange={handleFileChange}
               className="h-12"
             />
+            {imagePreview && (
+              <div className="mt-2">
+                <Image src={imagePreview} alt="Image preview" width={200} height={200} objectFit="contain" />
+              </div>
+            )}
           </div>
 
           {message && (
@@ -233,7 +251,7 @@ export function AddPromotionDialog({ open, onOpenChange }: AddPromotionDialogPro
               disabled={loading}
               className="bg-black hover:bg-black/90 text-white px-12 py-6 text-lg h-auto"
             >
-              {loading ? 'Ajout...' : 'Ajouter'}
+              {loading ? 'Modification...' : 'Modifier'}
             </Button>
           </div>
         </form>

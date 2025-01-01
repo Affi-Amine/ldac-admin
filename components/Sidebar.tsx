@@ -11,7 +11,6 @@ const navigation = [
   { name: 'Partenaires', href: '/dashboard/partners', icon: Building2 },
   { name: 'Utilisateurs', href: '/dashboard/users', icon: Users },
   { name: 'Promotions', href: '/dashboard/promotions', icon: BarChart3 },
-  { name: 'Log Actions', href: '/dashboard/logs', icon: Settings },
   { name: 'QR code', href: '/dashboard/qr-code', icon: QrCode },
 ]
 
