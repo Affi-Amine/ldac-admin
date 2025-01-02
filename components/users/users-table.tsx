@@ -106,7 +106,7 @@ export function UsersTable({ users }: UsersTableProps) {
           <DialogHeader>
             <DialogTitle>Confirmer la suppression</DialogTitle>
             <DialogDescription>
-              Êtes-vous sûr de vouloir supprimer l'utilisateur {deletingUser?.username} ? Cette action est irréversible.
+              Êtes-vous sûr de vouloir supprimer l&apos;utilisateur {deletingUser?.username} ? Cette action est irréversible.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

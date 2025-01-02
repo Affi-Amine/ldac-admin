@@ -1,4 +1,5 @@
 import { Promotion } from '@/types/promotion';
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 'use server'
 
 export interface Partner {

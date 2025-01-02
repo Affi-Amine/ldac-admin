@@ -169,7 +169,7 @@ export function AddPromotionDialog({ open, onOpenChange }: AddPromotionDialogPro
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="usage_limit">Limite d'utilisation</Label>
+            <Label htmlFor="usage_limit">Limite d&apos;utilisation</Label>
             <Input
               id="usage_limit"
               type="number"

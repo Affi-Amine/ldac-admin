@@ -20,7 +20,7 @@ export default async function UsersPage() {
     )
   } catch (error) {
     console.error('Error loading users:', error)
-    return <div>Une erreur s'est produite lors du chargement des utilisateurs.</div>
+    return <div>Une erreur s&apos;est produite lors du chargement des utilisateurs.</div>
   }
 }
 

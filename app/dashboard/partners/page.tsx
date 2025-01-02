@@ -20,7 +20,7 @@ export default async function PartnersPage() {
     )
   } catch (error) {
     console.error('Error loading partners:', error)
-    return <div>Une erreur s'est produite lors du chargement des partenaires.</div>
+    return <div>Une erreur s&apos;est produite lors du chargement des partenaires.</div>
   }
 }
 

@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Home, Users, Building2, BarChart3, Settings, QrCode, LogOut } from 'lucide-react'
+import { Home, Users, Building2, BarChart3, QrCode, LogOut } from 'lucide-react'
 import { Logo } from './Logo'
 import { Button } from '@/components/ui/button'
 

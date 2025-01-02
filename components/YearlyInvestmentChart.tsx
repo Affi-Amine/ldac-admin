@@ -33,7 +33,13 @@ const options = {
     y: {
       beginAtZero: true,
       ticks: {
-        callback: (value: number) => `$${value.toLocaleString()}`,
+        callback: (tickValue: string | number) => {
+          // Ensure tickValue is a number before formatting
+          if (typeof tickValue === 'number') {
+            return `$${tickValue.toLocaleString()}` // Format with dollar sign
+          }
+          return tickValue
+        },
       },
     },
   },
@@ -59,4 +65,3 @@ export function YearlyInvestmentChart() {
     </div>
   )
 }
-

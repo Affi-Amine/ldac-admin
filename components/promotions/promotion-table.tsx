@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { Promotion } from '@/types/promotion'
 import {
@@ -37,7 +36,6 @@ import { getPromotions, addPromotion, modifyPromotion, deletePromotion, getPartn
 const PACK_TYPES = ["Standard", "Premium", "VIP", "Origin"]
 
 export function PromotionsTable() {
-  const router = useRouter()
   const [promotions, setPromotions] = useState<Promotion[]>([])
   const [partners, setPartners] = useState<{ id: number; name: string }[]>([])
   const [editingPromotion, setEditingPromotion] = useState<Promotion | null>(null)
@@ -316,7 +314,7 @@ export function PromotionsTable() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="usage_limit">Limite d'utilisation</Label>
+              <Label htmlFor="usage_limit">Limite d&apos;utilisation</Label>
               <Input
                 id="usage_limit"
                 type="number"

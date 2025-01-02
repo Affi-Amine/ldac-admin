@@ -16,12 +16,11 @@ export function PromotionActions({ promotions }: PromotionActionsProps) {
     const headers = ['Nom', 'Partenaire', 'Pack Type', 'Date de début', 'Date de fin', 'ID']
     const csvData = promotions.map(promotion => [
       promotion.name,
-      promotion.partner || '-',
+      promotion.partner_name || '-', // Use partner_name instead of partner
       promotion.pack_type,
       new Date(promotion.valid_from).toLocaleDateString('fr-FR'),
       new Date(promotion.valid_until).toLocaleDateString('fr-FR'),
-      promotion.promotion_id,
-    ])
+    ]);
 
     const csvContent = [
       headers.join(','),
