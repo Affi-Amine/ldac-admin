@@ -6,7 +6,7 @@ const nextConfig = {
     }
   },
   images: {
-    domains: ['your-s3-bucket-domain.amazonaws.com'],
+    domains: ["dame-au-chignon-bucket.s3.amazonaws.com"],
   },
 }
 

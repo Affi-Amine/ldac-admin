@@ -45,6 +45,7 @@ export function LoginForm() {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="admin"
               required
+              className="placeholder-gray-500 placeholder-opacity-50" // Added Tailwind classes
             />
           </div>
 
@@ -59,7 +60,7 @@ export function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="pr-10"
+                className="pr-10 placeholder-gray-500 placeholder-opacity-50" // Added Tailwind classes
               />
               <button
                 type="button"
@@ -86,4 +87,3 @@ export function LoginForm() {
     </Card>
   )
 }
-

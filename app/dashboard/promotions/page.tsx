@@ -1,11 +1,7 @@
-import { BarChart3 } from 'lucide-react'
-import { getPromotions } from '@/app/actions/promotions'
-import { PromotionActions } from '@/components/promotions/promotion-actions'
-import { PromotionsTable } from '@/components/promotions-table'
+import { PromotionsManagement } from "@/components/promotions/prmotions-management"
+import { BarChart3 } from "lucide-react"
 
-export default async function PromotionsPage() {
-  const promotions = await getPromotions()
-
+export default function PromotionsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -13,9 +9,8 @@ export default async function PromotionsPage() {
           <h1 className="text-2xl font-semibold">Promotions</h1>
           <BarChart3 className="h-6 w-6" />
         </div>
-        <PromotionActions promotions={promotions} />
       </div>
-      <PromotionsTable promotions={promotions} />
+      <PromotionsManagement />
     </div>
   )
 }
