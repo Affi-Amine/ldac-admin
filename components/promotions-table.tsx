@@ -35,7 +35,7 @@ export function PromotionsTable({ promotions }: PromotionsTableProps) {
           {promotions.map((promotion) => (
             <TableRow key={promotion.promotion_id}>
               <TableCell>{promotion.name}</TableCell>
-              <TableCell>{promotion.partner_name || '-'}</TableCell> {/* Fixed property */}
+              <TableCell>{promotion.partner || '-'}</TableCell> {/* Fixed property */}
               <TableCell>{promotion.pack_type}</TableCell>
               <TableCell>{new Date(promotion.valid_from).toLocaleDateString('fr-FR')}</TableCell>
               <TableCell>{new Date(promotion.valid_until).toLocaleDateString('fr-FR')}</TableCell>

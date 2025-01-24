@@ -38,7 +38,7 @@ export function PromotionsManagement() {
     valid_from: "",
     valid_until: "",
     usage_limit: "",
-    partner_name: "",
+    partner: "",
     image: null as File | null,
   });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -57,7 +57,7 @@ export function PromotionsManagement() {
         valid_from: editingPromotion.valid_from ? editingPromotion.valid_from.split("T")[0] : "",
         valid_until: editingPromotion.valid_until ? editingPromotion.valid_until.split("T")[0] : "",
         usage_limit: typeof editingPromotion.usage_limit === "number" ? editingPromotion.usage_limit.toString() : "",
-        partner_name: editingPromotion.partner || "",
+        partner: editingPromotion.partner || "",
         image: null,
       });
       setImagePreview(editingPromotion.image || null);
@@ -70,7 +70,7 @@ export function PromotionsManagement() {
         valid_from: "",
         valid_until: "",
         usage_limit: "",
-        partner_name: "",
+        partner: "",
         image: null,
       });
       setImagePreview(null);
@@ -117,7 +117,7 @@ export function PromotionsManagement() {
       formDataToSend.append("valid_from", formData.valid_from);
       formDataToSend.append("valid_until", formData.valid_until);
       formDataToSend.append("usage_limit", formData.usage_limit || "0");
-      formDataToSend.append("partner_name", formData.partner_name || "");
+      formDataToSend.append("partner", formData.partner || "");
 
       if (formData.image instanceof File) {
         formDataToSend.append("image", formData.image);
@@ -228,7 +228,7 @@ export function PromotionsManagement() {
           valid_from: "",
           valid_until: "",
           usage_limit: "",
-          partner_name: "",
+          partner: "",
           image: null,
         });
         setImagePreview(null);
@@ -390,8 +390,8 @@ export function PromotionsManagement() {
               <div className="space-y-2">
                 <Label htmlFor="partner">Partenaire</Label>
                 <Select
-                  value={formData.partner_name}
-                  onValueChange={(value) => setFormData((prev) => ({ ...prev, partner_name: value }))}
+                  value={formData.partner}
+                  onValueChange={(value) => setFormData((prev) => ({ ...prev, partner: value }))}
                 >
                   <SelectTrigger className="h-12">
                     <SelectValue placeholder="Sélectionner un partenaire" />
@@ -468,7 +468,7 @@ export function PromotionsManagement() {
               valid_from: "",
               valid_until: "",
               usage_limit: "",
-              partner_name: "",
+              partner: "",
               image: null,
             });
             setImagePreview(null);
@@ -564,8 +564,8 @@ export function PromotionsManagement() {
               <div className="space-y-2">
                 <Label htmlFor="partner">Partenaire</Label>
                 <Select
-                  value={formData.partner_name}
-                  onValueChange={(value) => setFormData((prev) => ({ ...prev, partner_name: value }))}
+                  value={formData.partner}
+                  onValueChange={(value) => setFormData((prev) => ({ ...prev, partner: value }))}
                 >
                   <SelectTrigger className="h-12">
                     <SelectValue placeholder="Sélectionner un partenaire" />

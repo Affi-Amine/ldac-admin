@@ -30,12 +30,18 @@ export async function getPromotions(): Promise<Promotion[]> {
     }
 
     const data: PromotionsResponse = await response.json();
-    console.log("Backend Promotions Response:", data); // Log the backend response
+    console.log("Backend Promotions Response (Raw):", data); // Log the raw backend response
 
     if (!data.success) {
       console.error("Backend returned unsuccessful response:", data);
       return [];
     }
+
+    // Log each promotion to inspect the `usage_limit` field
+    data.data.forEach((promotion, index) => {
+      console.log(`Promotion ${index + 1}:`, promotion);
+      console.log(`Usage Limit for Promotion ${index + 1}:`, promotion.usage_limit);
+    });
 
     return data.data;
   } catch (error) {
@@ -43,7 +49,6 @@ export async function getPromotions(): Promise<Promotion[]> {
     return [];
   }
 }
-
 export async function addPromotion(
   formData: FormData,
 ): Promise<{ success: boolean; message: string; promotion?: Promotion }> {
@@ -54,10 +59,10 @@ export async function addPromotion(
       formData.set("usage_limit", usage_limit === "" ? "0" : usage_limit.toString());
     }
 
-    // Ensure partner_name is properly handled
-    const partner_name = formData.get("partner_name");
-    if (partner_name === null || partner_name === "") {
-      formData.set("partner_name", "");
+    // Ensure partner is properly handled
+    const partner = formData.get("partner");
+    if (partner === null || partner === "") {
+      formData.set("partner", "");
     }
 
     const response = await fetch(`${API_URL}/add_promotion/`, {
@@ -120,10 +125,10 @@ export async function modifyPromotion(
       formData.set("usage_limit", usage_limit === "" ? "0" : usage_limit.toString());
     }
 
-    // Ensure partner_name is properly handled
-    const partner_name = formData.get("partner_name");
-    if (partner_name === null || partner_name === "") {
-      formData.set("partner_name", "");
+    // Ensure partner is properly handled
+    const partner = formData.get("partner");
+    if (partner === null || partner === "") {
+      formData.set("partner", "");
     }
 
     const response = await fetch(`${API_URL}/modify_promotion/`, {
