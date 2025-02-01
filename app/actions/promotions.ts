@@ -53,6 +53,11 @@ export async function addPromotion(
   formData: FormData,
 ): Promise<{ success: boolean; message: string; promotion?: Promotion }> {
   try {
+    // Log the formData
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
     // Ensure usage_limit is properly handled
     const usage_limit = formData.get("usage_limit");
     if (usage_limit !== null) {
@@ -60,9 +65,9 @@ export async function addPromotion(
     }
 
     // Ensure partner is properly handled
-    const partner = formData.get("partner");
-    if (partner === null || partner === "") {
-      formData.set("partner", "");
+    const partner = formData.get("partner_name");  // Use 'partner_name' instead of 'partner'
+    if (!partner) {
+      throw new Error("Please select a partner.");
     }
 
     const response = await fetch(`${API_URL}/add_promotion/`, {
@@ -73,7 +78,7 @@ export async function addPromotion(
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message || `HTTP error! Status: ${response.status}`);
+      throw new Error(data.message || `Failed to add promotion. Status: ${response.status}`);
     }
 
     return {

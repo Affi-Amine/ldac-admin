@@ -11,7 +11,7 @@ import { Card } from "@/components/ui/card"
 import { RefreshCw, Download } from 'lucide-react'
 import { jsPDF } from "jspdf"
 
-const PACK_TYPES = ["Origin", "Absolute", "Evolution"]
+const PACK_TYPES = ["Origin", "Evolution", "High Privilege"]
 
 export function QRCodeGenerator() {
   const [qrCodeId, setQrCodeId] = useState("")

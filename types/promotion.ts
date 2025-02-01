@@ -6,7 +6,7 @@ export interface Promotion {
   valid_from: string
   valid_until: string
   usage_limit: number | null
-  partner: string | null
+  partner_name: string | null
   image: string | null
 }
 

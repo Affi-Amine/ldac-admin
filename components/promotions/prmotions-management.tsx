@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Pencil, Trash2, Plus } from "lucide-react";
-import type { Promotion } from "@/types/promotion";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,8 +19,9 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getPromotions, deletePromotion, modifyPromotion, getPartners, addPromotion } from "@/app/actions/promotions";
+import { Promotion } from "@/types/promotion";
 
-const PACK_TYPES = ["Origin", "Evolution", "Absolute"];
+const PACK_TYPES = ["Origin", "Evolution", "High Privilege"];
 
 export function PromotionsManagement() {
   const [promotions, setPromotions] = useState<Promotion[]>([]);
@@ -38,7 +38,7 @@ export function PromotionsManagement() {
     valid_from: "",
     valid_until: "",
     usage_limit: "",
-    partner: "",
+    partner_name: "",
     image: null as File | null,
   });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -57,7 +57,7 @@ export function PromotionsManagement() {
         valid_from: editingPromotion.valid_from ? editingPromotion.valid_from.split("T")[0] : "",
         valid_until: editingPromotion.valid_until ? editingPromotion.valid_until.split("T")[0] : "",
         usage_limit: typeof editingPromotion.usage_limit === "number" ? editingPromotion.usage_limit.toString() : "",
-        partner: editingPromotion.partner || "",
+        partner_name: editingPromotion.partner_name || "",
         image: null,
       });
       setImagePreview(editingPromotion.image || null);
@@ -70,7 +70,7 @@ export function PromotionsManagement() {
         valid_from: "",
         valid_until: "",
         usage_limit: "",
-        partner: "",
+        partner_name: "",
         image: null,
       });
       setImagePreview(null);
@@ -117,7 +117,7 @@ export function PromotionsManagement() {
       formDataToSend.append("valid_from", formData.valid_from);
       formDataToSend.append("valid_until", formData.valid_until);
       formDataToSend.append("usage_limit", formData.usage_limit || "0");
-      formDataToSend.append("partner", formData.partner || "");
+      formDataToSend.append("partner", formData.partner_name || "");
 
       if (formData.image instanceof File) {
         formDataToSend.append("image", formData.image);
@@ -179,7 +179,7 @@ export function PromotionsManagement() {
     const headers = ["Nom", "Partenaire", "Pack Type", "Date de début", "Date de fin", "Limite d'utilisation"];
     const csvData = promotions.map((promotion) => [
       promotion.name,
-      promotion.partner || "-",
+      promotion.partner_name || "-",
       promotion.pack_type,
       new Date(promotion.valid_from).toLocaleDateString("fr-FR"),
       new Date(promotion.valid_until).toLocaleDateString("fr-FR"),
@@ -228,7 +228,7 @@ export function PromotionsManagement() {
           valid_from: "",
           valid_until: "",
           usage_limit: "",
-          partner: "",
+          partner_name: "",
           image: null,
         });
         setImagePreview(null);
@@ -278,7 +278,7 @@ export function PromotionsManagement() {
             {promotions.map((promotion) => (
               <TableRow key={promotion.promotion_id}>
                 <TableCell>{promotion.name}</TableCell>
-                <TableCell>{promotion.partner || "-"}</TableCell>
+                <TableCell>{promotion.partner_name || "-"}</TableCell>
                 <TableCell>{promotion.pack_type}</TableCell>
                 <TableCell>{new Date(promotion.valid_from).toLocaleDateString("fr-FR")}</TableCell>
                 <TableCell>{new Date(promotion.valid_until).toLocaleDateString("fr-FR")}</TableCell>
@@ -390,7 +390,7 @@ export function PromotionsManagement() {
               <div className="space-y-2">
                 <Label htmlFor="partner">Partenaire</Label>
                 <Select
-                  value={formData.partner}
+                  value={formData.partner_name}
                   onValueChange={(value) => setFormData((prev) => ({ ...prev, partner: value }))}
                 >
                   <SelectTrigger className="h-12">
@@ -468,7 +468,7 @@ export function PromotionsManagement() {
               valid_from: "",
               valid_until: "",
               usage_limit: "",
-              partner: "",
+              partner_name: "",
               image: null,
             });
             setImagePreview(null);
@@ -477,7 +477,7 @@ export function PromotionsManagement() {
       >
         <DialogContent className="sm:max-w-[600px] w-[600px] max-h-[80vh] bg-white text-black overflow-y-auto p-6">
           <DialogHeader>
-          <DialogTitle>Ajouter une promotion</DialogTitle>
+            <DialogTitle>Ajouter une promotion</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleAdd} className="space-y-6">
             <div className="grid gap-6">
@@ -562,10 +562,10 @@ export function PromotionsManagement() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="partner">Partenaire</Label>
+                <Label htmlFor="partner_name">Partenaire</Label>
                 <Select
-                  value={formData.partner}
-                  onValueChange={(value) => setFormData((prev) => ({ ...prev, partner: value }))}
+                  value={formData.partner_name}  // Use 'partner_name' instead of 'partner'
+                  onValueChange={(value) => setFormData((prev) => ({ ...prev, partner_name: value }))}  // Use 'partner_name'
                 >
                   <SelectTrigger className="h-12">
                     <SelectValue placeholder="Sélectionner un partenaire" />
